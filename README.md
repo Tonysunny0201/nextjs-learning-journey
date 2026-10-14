@@ -34,8 +34,8 @@ The goal is not just to complete a tutorial, but to understand the concepts, pra
 
 I am following the course in its original lesson order and tracking my progress in `learning-roadmap.md`.
 
-- [ ] Introduction and project setup
-- [ ] Routing fundamentals
+- [X] Introduction and project setup
+- [X] Routing fundamentals
 - [ ] Layouts, metadata, and navigation
 - [ ] Loading UI and error handling
 - [ ] Advanced routing patterns
@@ -83,7 +83,7 @@ Folders will be added as I progress through the course. Empty folders may not ap
 
 ## 📝 Notes and Interview Preparation
 
-I maintain a separate `notes.txt` file for revision and interview preparation.
+I maintain a separate `Notes.txt` file for revision and interview preparation.
 
 My notes focus on:
 
@@ -96,7 +96,7 @@ My notes focus on:
 
 The purpose of these notes is to help me recall concepts quickly and explain them confidently during technical interviews.
 
-**Revision notes:** [notes.txt](./notes.txt)
+**Revision notes:** [Notes.txt](./Notes.txt)
 
 ## 🧪 Practice and Projects
 

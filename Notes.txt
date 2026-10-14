@@ -1,0 +1,164 @@
+------------------------------------------Next Js---------------------------------------------------
+----------------------------------------------------------------------------------------------------
+
+1. Install command : npx create-next-app@latest / npx create-next-app@latest project_name
+2. To Run the Next.js Project : npm run dev 
+
+- created nextjs project using above command, and displayed "Hello World"
+- Learned Project/file Structure 
+- RSC (React Server Components) : React Server Components is a new architecture that was introduced by the React team and quickly adopted by Next.js , this architecture introduces a new approach to creating React components by dividing them into two distinct types:
+    - Server Components : 
+        - By default, Next.js treats all components as Server components.
+        - These components can perform server-side tasks like reading files or fetching data directly from a database.
+        - The trade-off is that they can't use React hooks or handle user interactions 
+    - Client Components :
+        - To create a Client component, you'll need to add the "use client" directive at the top of your component file.
+        - While Client components can't perform server-side tasks like reading files,they can use hooks and handle user interactions.
+        - Client components are the traditional React components you're already familiar with from previous versions of React.
+    *- As we get into routing, you'll see practical examples of both types. Work with server components that wait for certain operations to complete before rendering content. Use client components to take advantage of hooks from the routing module. 
+- Routing : Next.js has a file system based routing system. URLs you can access in your browser are determined by how you organize your files and folder in your code.
+Routing Conventions :
+    1. All routes must live inside the app folder
+    2. Route files must be named either page.js or page.tsx
+    3. Each folder represents a segment of the URL path
+    when these conventions are followed, the file automatically becomes available as a route.
+- Nested Routes
+- Dynamic Routes : 
+    Summary:
+        we have created a folder with square brackets containing product ID added a page.tsx file inside it and Next js now maps any SL products slid URL to this file inside the component we grab the product ID from the param prop to show Dynamic content.
+    Visualiztion of Dynamic Routes:
+        app/
+        ├── products/
+        │   ├── [productId]/
+        │   │   └── page.tsx
+        │   └── page.tsx
+        ├── layout.tsx
+        └── page.tsx 
+    *This pattern is super useful for building list detail views in your application whether you're building an e-commerce site with millions of products or a blog with a few hundred blog posts or any app that needs Dynamic routing this approach will serve you well. 
+
+- Nested Dynamic Routes :
+    Visualiztion of Nested Dynamic Routes:
+        app/
+        ├── products/
+        │   ├── [productId]/
+        │   │   ├── reviews/
+        │   │   │   ├── [reviewId]/
+        │   │   │   │   └── page.tsx
+        │   │   │   └── page.tsx
+        │   │   └── page.tsx
+        ├── layout.tsx
+        └── page.tsx
+    *The key takeaway here is that you can create nested dynamic routes simply by using dynamic segments with nested folder names. But here is someting  interesting, Next.js actually has another way to handle multiple dynamic path segments.
+- catch all segments: 
+    Visualiztion of Catch all segments:
+        app/
+        ├── docs/
+        │   └── [...slug]/
+        │       └── page.tsx
+        ├── layout.tsx
+        └── page.tsx
+    Explanation:
+    - [...slug] captures one or more URL segments.
+    - It allows a single dynamic route to match multiple nested paths.
+    - It requires at least one segment after /docs.
+
+    Examples:
+    - /docs/getting-started
+    - /docs/getting-started/installation
+    - /docs/api/users
+
+    In page.tsx:
+    The slug parameter is an array of strings.
+
+    Example:
+    URL: /docs/api/users
+    slug = ["api", "users"]
+
+    Note:
+    - /docs does NOT match this route.
+    - Use [[...slug]] to make the catch-all segment optional,
+    allowing /docs to match too.
+
+    Quick comparison:
+    | Route folder    |	What it matches |
+    | [slug]	      | One segment
+    | [...slug]	      | One or more segments
+    | [[...slug]]	  | Zero or more segments
+
+- Not found Page
+- File Colocation :
+    *so, the key takeaway here is; You can safely collocate project files inside route segments in the app directory without worrying about them accidentally becoming routes themselves. By the way, while you can keep your files in the app directory, you don't have to. some developers prefer to keep their files outside the app directory, maybe in the source folde with  a separate components folder for all their UI components.
+- Private Folders : A way to tell Next.js, "Hey, this folder is just for internal stuff - don't include it in the routing system." The folder and all its subfolders are excluded from routing. Add an underscore at the start of the folder name.
+    - Private folders contd. ~ private folders are super usefull for a bunch of things :-
+        1. Keeping your UI logic separate from routing logic.
+        2. Having a consistent way to organize internal files in your project.
+        3. Making it easier to group related files in your code editor.
+        4. Avoiding potential naming conflicts with future Next.js file naming conventions.
+        * If you actually want an underscore in your URL, use "%5F" instead. That's just the URL-encoded version of an underscore. 
+- Route Groups : Lets us logically organize our routes and project files without impacting the URL structure. It is also worth noting that route groups are actually the only way to share a layout between routes without affecting the URL.
+    - Let's implement authentication routes;
+        - Register
+        - Login
+        - Forgot password
+    *To create a route group we simply wrap the folder name in parenthesis. (this tell next.js to treat this  folde as an organizational tool only excluding  it from the URL path.)
+- Layouts : Pages are route-specific UI components , A Layout is UI that is shared between multiple pages in your application. (think of it like having a consistent structure, such a header and footer, that appears on every page. Next.js makes it super easy to implement.)
+    - How to create layouts:
+        - Default export a React component from a layout.js or layout.tsx file
+        - That component takes a children prop, which Next.js will populate with your page content.
+    Visualiztion of how layouts work in the app router:
+        app/
+        ├── layout.tsx
+        ├── about/
+        │   └── page.tsx
+        ├── profile/
+        │   └── page.tsx
+        └── page.tsx
+    Explanation:
+    - When you visit localhost:3000, the root layout component in layout.tsx in the app folder gets rendered. This contains a header at the top, a footer at the bottom, and the children prop in between. The children prop gets replaced by the component defined in page.tsx within the app folder. when you visit localhost:3000/about The component defined in page.tsx within the about folder replaces the children content in the layout file. And when  you visit localhost:3000/profile, the component defined in page.tsx within the profile folder replaces the children prop in the layout file.
+
+- Nested Layouts : 
+    *thekey takeaway here is that next.js app routerr supports nested layouts letting you customize different parts of your app exact how you want to
+    Visualiztion: 
+        app/
+        ├── layout.tsx
+        ├── products/
+        │   ├── [productId]/
+        │   │   ├── layout.tsx
+        │   │   └── page.tsx
+        │   └── page.tsx
+        └── page.tsx
+
+- Multiple Root Layouts :
+    Route Group uses:
+    - Organize our project structure without affecting URLs
+    - Apply layouts selectively to specific parts of our app
+    
+- Routing Metadata : The Metadata API in Next.js is a powerful feature that lets us define metadata for each page. Metadata ensures our content looks great when it's shared or indexed by search engines. 
+    - Two ways to handle metadata in layout.tsx or page.tsx files :
+        1. export a static metadata object
+        2. export a dynamic generateMetadata function
+    - Metadata rules :
+        - Both layout.tsx and page.tsx can export metadata. Layout metadata applies to all its pages, while page metadata is specific to that page. 
+        - Metadata follows a top-down order, starting from the root level.
+        - When metadata exists in multiple places along a route, they merge together, with page metadata overriding layout metadata for matching properties.
+
+
+
+--------------------------------------------------- 
+why  learn Next.js ? 
+next.js simplifies the process of building production-ready web applications
+1. Routing
+2. API Routes
+3. Rendering 
+4. Data fetching
+5. styling
+6. Optimization
+7. Dev and prod build system
+
+Prerequisites 
+HTML, CSS, modern JavaScript,React fundamenetals
+  
+
+
+
+
