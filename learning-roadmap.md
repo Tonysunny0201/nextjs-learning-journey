@@ -34,13 +34,13 @@
 - [X] **14.** Layouts
 - [X] **15.** Nested Layouts
 - [X] **16.** Multiple Root Layouts
-- [ ] **17.** Routing Metadata
-- [ ] **18.** title Metadata
-- [ ] **19.** Link Component
-- [ ] **20.** Active Links
-- [ ] **21.** params and searchParams
-- [ ] **22.** Navigating Programmatically
-- [ ] **23.** Templates
+- [X] **17.** Routing Metadata
+- [X] **18.** title Metadata
+- [X] **19.** Link Component
+- [X] **20.** Active Links
+- [X] **21.** params and searchParams
+- [X] **22.** Navigating Programmatically
+- [X] **23.** Templates
 
 ## 4. Loading and Error Handling
 

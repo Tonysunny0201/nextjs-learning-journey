@@ -141,6 +141,64 @@ Routing Conventions :
         - Both layout.tsx and page.tsx can export metadata. Layout metadata applies to all its pages, while page metadata is specific to that page. 
         - Metadata follows a top-down order, starting from the root level.
         - When metadata exists in multiple places along a route, they merge together, with page metadata overriding layout metadata for matching properties.
+    *One important point; is that  you can't use both a metadata object and generate metadata function in the same route segment it is one or the other.
+    *There is one crucial limitation you need to be aware of when working with metadata, it will not work in pages that are marked with the use client directive.
+    *the solution is to keep your metadata in server components and extract any client side functionality into separate components.
+    *so the correct pattern is; in the counter folder create a new conuter.tsx file and move the client side logic from page.tsx into counter.tsx after pasting it, remove the metadata object from counter.tsx file and rename the export function. In the counter routes page.tsx  file we can now import the counter component and return it. so remove the use client directive & useState hook but leave the metadata object as it is.
+
+- title metadata : The title field's primary purpose is to define the document title. It can be either a string or an object. 
+    Two approaches :
+    - the simplest way to set the title is with a string value, this is what we've been doing in out layout.tsx and page.tsx files
+    eg; 
+        export const metadata = {
+            title: "Counter Page",
+            description: "A simple counter page",
+        };
+        -here it renders exactly that string in  the browser's title tag but what if we need more control that is where defining the title as an object comes in handy.(it might seem complex at first but we will get the hang of it)
+    - Title as an object : 
+    - When using the object approach we get three powerful options; 
+        1. default : the title.default property acts as a fallback for any child routes that don't specify their own title for instance if we set the  value to next.js tutorial with tony and you have a page like app/blog/page.tsx without a defined title it will automatically use this default title.
+        2. template : the template option is really useful when we want to add consistent prefixes oe suffixes to your title, this property applies to child routes. (we will set it to; "%s | By Tony" -so this to workm in the blog page, set the title to blog so export const metadatatitle set to blog. so the output will be : "Blog | By Tony" ) 
+            *this pattern is paricularly useful in multi-page applications were we want consistent title formatting across your site.
+        3. absolute : It helps when we might want to break free from the template pattern set by parent segments, that is exactly what title.absolute  property does.
+         *to work , add the title as an object in the profile page and we set absolute the value is the string "Profile" - so the title.absolute overrides  the parent segments title.
+- Link component :
+    - Navigation
+        -File based routing system
+        -Defining routes for our application's routes, dynamic routes, anf catch-all routes
+        -We've been typing  URLs firectly in the browser to test these routes 
+    - Users
+        - click on link
+        - get redirected after certain actions
+    Link component navigation
+        - for client-side navigation, next.js give us the <Link> component
+        - The `<Link>` component is a React component that extends the HTML `<a>` element, and it's the primary way to navigate between routes in Next.js
+        - To use it, we'll need to import it from "next/link"
+        *examples, in the - // practice/routing-demo/src/app/products/page.tsx
+- Active Links :
+    usepathname hook
+- params and searchParams : 
+    For a given URL,
+        - params is a promise that resolves to an object containing the dynamic route parameters(like id)
+        - searchParams is a promise that resloves to an object containing the query parameters (like filters and sorting)
+    *To point out that we are able to await and access params and searchParams inthe news article component becaus it is a server component.
+    *If this was a client component, we would get an error as client components donot support async await. (Add "use client" at the top and you will see the issue)
+    *So, To access the values of params and searchParams in a client component, you will need to use a hook from React which is the "use" hook.
+    *So, async await for server components, but "use" hook for client components.
+    - While page.tsx has access to both params and searchParams layout.tsx only has access to params. Search Params are not available in layout components.
+- Navigating Programmatically
+- Templates : Templates are similar to layout in that they are also UI shared between multiple pages in your app.
+    - Whenever a user navigates between routes sharing a template, you get a completely fresh start.
+        - a new template component instance in mounted
+        - DOM elements are recreated 
+        - state is cleared
+        - effects are re-synchronized
+    - Create a template by exporting a default React component from a template.js or template.tsx file.
+    - Like layouts, templates need to accept a children prop to render the nested route segments. 
+    Explanation as eg;
+        - This happens Because layouts only mount the New page content While keeping the common elements intact They do not remember shared components which leads to better performance register login and their personal ask the new pages that are remounted when navigating between them. Whereas The input in the layout which is a shared component is not remounted. 
+        - (This behaviour works great for the most Access now ever Sometimes you might need the layout to create a fresh instance For each child components during navigation; this would be useful for scenarios like Implementing enter or exit animation or running use effect to when routes change.) This Is there template file comes in handy An alternative Layout Files. 
+
 
 
 
