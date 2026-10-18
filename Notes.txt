@@ -186,7 +186,23 @@ Routing Conventions :
     *So, To access the values of params and searchParams in a client component, you will need to use a hook from React which is the "use" hook.
     *So, async await for server components, but "use" hook for client components.
     - While page.tsx has access to both params and searchParams layout.tsx only has access to params. Search Params are not available in layout components.
-- Navigating Programmatically
+- Navigating Programmatically:
+    - useRouter is a hook that allows us to access the router object in a client component. 
+    - Each of the methods below is used to navigate to a different page in the application.
+        const router = useRouter();
+        const handleClick = () => {
+            console.log("Order placed!");
+            router.push("/"); -- navigate to the home page after placing the order
+            router.prefetch("/"); -- prefetch the home page for faster navigation
+            router.back(); -- navigate back to the previous page
+            router.forward(); -- navigate forward to the next page
+            router.replace("/"); -- replace the current page with the home page
+        }
+
+    - redirect to the products page if the reviewId is greater than 1000, it hows how we can use redirect in a server component to redirect to another page. we can also use notFound() to show a 404 page.
+        // notFound();
+        Eg; redirect("/products");   
+
 - Templates : Templates are similar to layout in that they are also UI shared between multiple pages in your app.
     - Whenever a user navigates between routes sharing a template, you get a completely fresh start.
         - a new template component instance in mounted
@@ -195,14 +211,26 @@ Routing Conventions :
         - effects are re-synchronized
     - Create a template by exporting a default React component from a template.js or template.tsx file.
     - Like layouts, templates need to accept a children prop to render the nested route segments. 
+    (to demo this we simply need to rename out layout.tsx to template.tsx)
+    (it is worth mentioning that you can actually use both layout.tsx and template.tsx files together, in this case the layout renders first and then itts children are replaced by template components output are not a common requirement and layouts should be your go-to for shared UI. )
+    "// there is no example codes for Templates"
     Explanation as eg;
         - This happens Because layouts only mount the New page content While keeping the common elements intact They do not remember shared components which leads to better performance register login and their personal ask the new pages that are remounted when navigating between them. Whereas The input in the layout which is a shared component is not remounted. 
         - (This behaviour works great for the most Access now ever Sometimes you might need the layout to create a fresh instance For each child components during navigation; this would be useful for scenarios like Implementing enter or exit animation or running use effect to when routes change.) This Is there template file comes in handy An alternative Layout Files. 
 
+- Loading UI : This file help us to create loading states that users see while waiting for the content to load in a specific route segment. The loading states appear Instantly when navigating , letting users know that the application is responsive and atively loading content.
+    - How to create a loading screen : Create/add a loading.tsx file in the right folder. (For eg; Create loading.tsx file in the blog folder..)
+    - Benefits :
+        1. It gives users immediate feedback when they navigate somewhere new. This makes your app feel snappy and responsive, and users know their click actually did something.
+        2. Next.js keeps shared layouts interactive while new content loads. Users can still use things like navigation menus or sidebars even if the main content isn't ready yet.
 
 
 
---------------------------------------------------- 
+
+
+
+
+-----------------------------------------------------------------------------------------------
 why  learn Next.js ? 
 next.js simplifies the process of building production-ready web applications
 1. Routing

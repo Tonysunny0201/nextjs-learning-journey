@@ -44,7 +44,7 @@
 
 ## 4. Loading and Error Handling
 
-- [ ] **24.** Loading UI
+- [X] **24.** Loading UI
 - [ ] **25.** Error Handling
 - [ ] **26.** Recovering from Errors
 - [ ] **27.** Handling Errors in Nested Routes
