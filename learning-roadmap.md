@@ -45,11 +45,11 @@
 ## 4. Loading and Error Handling
 
 - [X] **24.** Loading UI
-- [ ] **25.** Error Handling
-- [ ] **26.** Recovering from Errors
-- [ ] **27.** Handling Errors in Nested Routes
-- [ ] **28.** Handling Errors in Layouts
-- [ ] **29.** Handling Global Errors
+- [X] **25.** Error Handling
+- [X] **26.** Recovering from Errors
+- [X] **27.** Handling Errors in Nested Routes
+- [X] **28.** Handling Errors in Layouts
+- [X] **29.** Handling Global Errors
 
 ## 5. Advanced Routing Patterns
 
