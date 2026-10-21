@@ -37,7 +37,7 @@ I am following the course in its original lesson order and tracking my progress 
 - [X] Introduction and project setup
 - [X] Routing fundamentals
 - [X] Layouts, metadata, and navigation
-- [ ] Loading UI and error handling
+- [X] Loading UI and error handling
 - [ ] Advanced routing patterns
 - [ ] Route Handlers and Middleware
 - [ ] Rendering fundamentals

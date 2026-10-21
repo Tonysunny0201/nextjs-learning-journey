@@ -1,36 +1,66 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 04 — Loading and Error Handling
 
-## Getting Started
+This section explores how to handle loading states, errors, and recovery mechanisms in Next.js applications using the App Router.
 
-First, run the development server:
+The goal is to understand how Next.js manages loading interfaces, catches errors, and provides recovery mechanisms at different levels of the application.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 📚 Topics Covered
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- [x] **24. Loading UI**
+- [x] **25. Error Handling**
+- [x] **26. Recovering from Errors**
+- [x] **27. Handling Errors in Nested Routes**
+- [x] **28. Handling Errors in Layouts**
+- [x] **29. Handling Global Errors**
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🎯 Learning Objectives
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+By completing this section, I learned how to:
 
-## Learn More
+- Display loading interfaces while routes or content are loading.
+- Handle errors using Next.js error boundaries.
+- Implement error recovery using the `reset()` function.
+- Handle errors within nested route segments.
+- Understand error handling boundaries around layouts.
+- Implement global error handling for application-wide failures.
+- Improve the user experience when unexpected errors occur.
 
-To learn more about Next.js, take a look at the following resources:
+## 🛠️ Key Next.js Concepts
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+| Concept | Purpose |
+|---|---|
+| `loading.tsx` | Displays a loading UI for a route segment. |
+| `error.tsx` | Provides a fallback UI for errors within a route segment. |
+| `reset()` | Attempts to recover from an error by re-rendering the affected segment. |
+| Nested Error Boundaries | Isolate errors within specific route segments. |
+| Layout Error Handling | Understand how errors interact with layouts and their boundaries. |
+| `global-error.tsx` | Handles errors at the root layout level. |
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🧠 Key Takeaways
 
-## Deploy on Vercel
+- Loading and error states are important parts of a reliable user experience.
+- Next.js uses conventions such as `loading.tsx` and `error.tsx` to handle these states.
+- Error boundaries help isolate failures instead of allowing every error to affect the entire application.
+- The `reset()` function provides a mechanism for attempting recovery from an error.
+- Errors in nested routes can be handled independently when appropriate boundaries are in place.
+- Root-level errors require special handling because the root layout itself may have failed.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 📂 Project Structure
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The examples and implementations for this topic are organized in this directory.
+
+Refer to the source files in this folder to explore the individual concepts and their implementations.
+
+## ✅ Progress
+
+**Status:** Completed
+
+**Completed Topics:** 6/6
+
+**Section:** Loading and Error Handling
+
+**Important:** Some Error Handling will only works in Production.... 
+
+---
+
+*Part of my Next.js Learning Journey — learning by building, experimenting, and documenting.*

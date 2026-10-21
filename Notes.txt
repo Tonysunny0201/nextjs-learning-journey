@@ -224,6 +224,224 @@ Routing Conventions :
         1. It gives users immediate feedback when they navigate somewhere new. This makes your app feel snappy and responsive, and users know their click actually did something.
         2. Next.js keeps shared layouts interactive while new content loads. Users can still use things like navigation menus or sidebars even if the main content isn't ready yet.
 
+- Error Handling : 
+    error.tsx :
+        - it automatically wraps route segmentsand their nested children in a React Error Boundary. 
+        - You can create custom error UIs for specific segments using the file-system hierachy.
+        - It isolates errors to affected segments while keeping the rest of your app functional.
+        - It enables you to attempt to recover from an error without requiring a full page reload
+        eg; 
+            export default function ErrorBoundary(){
+                return <div>Error in reviewId</div>
+            }
+            here, this component acts as an error boundary around our page.tsx file , it is very important to note that the error boundary must be client components(we can add ; "use client"; in the top of the file.)
+
+        eg2; 
+            "use client";
+
+            export default function ErrorBoundary({error}:{error: Error}){
+                return (
+                    <div>
+                        {/* <h1>Something went wrong, Error in reviewId</h1> */}
+                        <p>{error.message}</p>
+                    </div>
+                )
+            }
+            here, we replace the hardcoded text with error.message to show the error message that was thrown in the server component. this is how we can use error boundaries in nextjs 13 to catch errors in server components and show a fallback UI. this is useful for production, we can show a user friendly error message instead of crashing the entire application.
+
+    Component Hierarchy in Next.js
+    ------------------------------
+    layout.js
+    template.js
+    error.js
+    loading.js
+    not-found.js
+    page.js
+
+    ⬇️
+
+    Component Hierarchy:
+    --------------------
+
+    <Layout>
+        <Template>
+            <ErrorBoundary fallback={<Error />}>
+                <Suspense fallback={<Loading />}>
+                    <ErrorBoundary fallback={<NotFound />}>
+                        <Page />
+                    </ErrorBoundary>
+                </Suspense>
+            </ErrorBoundary>
+        </Template>
+    </Layout>
+
+    Quick revision notes:
+    - layout.js — Shared UI that persists across navigation.
+    - template.js — Similar to a layout, but remounts when navigation occurs.
+    - error.js — Displays a fallback UI when an error occurs.
+    - loading.js — Displays a loading UI while content loads.
+    - not-found.js — Displays a not-found UI when a route or resource cannot be found.
+    - page.js — Defines the route's main UI.
+    *Note: The diagram illustrates the conceptual component hierarchy. Next.js internally manages these components and boundaries; you don't need to write this entire JSX hierarchy manually.
+
+- Recovering from Errors : 
+- Handling Errors in Nested Routes :
+    - Error always bubble up to find the closest parent error boundary. 
+    - An error.tsx file handles errors not just for its own folder, but for all the nested child segments below it too
+    - By strategically placing error.tsx files at different levels in your route folders, you can control exactly how detailed your error handling gets.
+    *To understand this, lets suppose i moved our error.tsx file from  the review ID folder up to the product route folder. when we refresh the browser and trigger an error, then we will see the same error message "error loading review" but there is a crucial difference this time the entire products route gets replaced by what is in error.tsx file, that is because the error from page.tsx in the reviewID folder bubbles up until it finds the nearest error boundary which is now in the products folder.
+    *but if we move the file back to the reviewID folder and refresh, now the "Featured products" section from our product ID layout stays in place and only the review ID component gets replaced by our error.tsx UI
+    - Where you put your error.tsx file makes a huge difference - it determines exactly which parts of your UI gets affected when things go wrong.
+- Handling Errors in Layouts : 
+    - An error.tsx file will handle errors for all its nested child segments
+    - There's an interesting catch with layout.tsx components in the same segments
+    - The error boundary won't catch errors thrown in layout.tsx within the same segment because of how the component hierachy works.
+    - The layout actually sits above the error boundary in the component tree.
+    -----------------------------------
+        layout.js
+        template.js
+        error.js
+        loading.js
+        not-found.js
+        page.js
+        
+        ⬇️
+
+        Component Hierarchy:
+        ------------------------
+        <Layout>
+            <Template>
+                <ErrorBoundary fallback={<Error />}>
+                    <Suspense fallback={<Loading />}>
+                        <ErrorBoundary fallback={<NotFound />}>
+                            <Page />
+                        </ErrorBoundary>
+                    </Suspense>
+                </ErrorBoundary>
+            </Template>
+        </Layout>
+    -----------------------------------
+
+- Handling Global Errors : 
+    - If an error boundary can't catch errors in the layout.tsx file from the same segment, what about errors in the root layout?
+    - It doesn't a have parent segment - how do we handle those errors?
+    - *Next.js provides a special file called "global-error.tsx" that goes in your root app directory.
+    - *This is your last line of defense when something goes catastrophically wrong at the hishest level of your app.
+        - **works only in production mode
+        - **requires html and body tags to be rendered 
+        (these are two crucial things we need to know about global-error.tsx that makes it different from our regular error.tsx files since we can't catch any more errors it is recommended to have global.tsx as simple as possible. HTML and CSS would be the ideal scenario.)
+    How to set this up : 
+        1. Create error-wrapper.tsx file in the app folder.
+        2. In layoutl.tsx file, import the component(error-wrapper.tsx) and wrap around children
+        3. next, add/create a global-error.tsx in app folder, (so adjacent to layout.tsx file in the app folder).  
+
+- Parallel Routes : 
+    -What they are:
+        - Parallel routing is an advanced routing mechanism that lets us render multiple pages simultaneously within the same layout.
+
+    - How to set them up: 
+        - Parallel routes in Next.js are defined using a feature known as "slots"
+        - Slots help organize content in a modular way
+        - To create a slot, we use the `@folder` naming convention 
+        - Each defined slot automatically becomes a prop in its corresponding `layout.tsx` file
+
+    Parallel Routes in Next.js
+    --------------------------
+
+    app/
+    └── dashboard/
+        ├── @notifications/
+        │   └── page.tsx
+        ├── @revenue/
+        │   └── page.tsx
+        └── @users/
+            └── page.tsx
+
+    Visualization concept:
+
+    /dashboard
+    ├── HEADER
+    ├── DASHBOARD
+    │   ├── User analytics   (@users)
+    │   ├── Revenue metrics  (@revenue)
+    │   └── Notifications    (@notifications)
+    └── FOOTER
+
+    (so here, for our complex dashboard we will create three slots within the complex  dashboard folder @users for user analytics @revenue for Revenue metrics and @notification for notifications...)
+
+    Quick revision notes:
+    - @notifications, @revenue, and @users are parallel route slots.
+    - The @ symbol defines a slot; it does not appear in the URL.
+    - Parallel routes allow multiple pages or UI sections to render simultaneously within the same layout.
+    - The parent dashboard/layout.tsx receives these slots as props and decides where to render them.
+    Example URL: http://localhost:3000/dashboard
+
+    *Important: To display all three slots together, you'll also need a dashboard/layout.tsx that accepts and renders the notifications, revenue, and users props.
+    - use cases: 
+        - Dashboard with multiple sections
+        - Split-view interfaces
+        - Multi-pane layouts
+        - Complex admin interfaces
+    - Benefits: 
+        1. Parallel routes are great for splitting a layout into manageable slots (Especially when different works on different parts)
+        2. Independent route handling : 
+            - Each slot in your layout, such as users, revenue, and notifications, can handle its own loading and error states
+            - This granular control is particularly useful in scenarios where different sections of the page load at varying speeds or encounter unique errors.
+            *For example; if your user analytics date is taking its sweet time to load, you can show a loading Spinner just for that part while everything else stays interactive or something goes wrong with fetching Revenue metrics you can display an error message in that specific slot without breaking the rest of your dashboard.
+        3. Sub-navigation :
+            *The other significant advantage of using parallel routes is their capability to offer a seamless subnavigation experience within each parallel route, 
+            - Each slot can essentially function as a mini-application, complete with its own navigation and state management.
+            - Users can interact with each section separately, applying filters, sorting data, or navigation through pages without affecting other parts.
+            *For example; in the notification Section users might want to switch between default and archived views to see older notifications, these interactions stay contained within the notification section and URL updates to match the current view this makes the URL sharable and help users track their loaction in the application, users can also navigate through different parts of the application without unnecessary page reloads or layout shifts.
+        
+        Examples for Independent route handling & Sub-navigation :
+            Parallel Routes: Loading and Error States
+            -----------------------------------------
+
+            Loading State:
+            - Displays a loading UI while a parallel route slot is loading.
+            - Created using loading.tsx inside the relevant slot.
+
+            Error State:
+            - Displays an error UI when an error occurs in a parallel route slot.
+            - Created using error.tsx inside the relevant slot.
+
+            Example Folder Structure:
+            -------------------------
+
+            app/
+            └── dashboard/
+                ├── @notifications/
+                │   ├── page.tsx
+                │   ├── loading.tsx
+                │   └── error.tsx
+                ├── @revenue/
+                │   ├── page.tsx
+                │   ├── loading.tsx
+                │   └── error.tsx
+                ├── @users/
+                │   ├── page.tsx
+                │   ├── loading.tsx
+                │   └── error.tsx
+                ├── layout.tsx
+                └── page.tsx
+
+            Key Points:
+            -----------
+            - Each parallel route slot can have its own loading and error UI.
+            - loading.tsx automatically creates a loading UI for the segment.
+            - error.tsx creates an error boundary for the route segment.
+            - error.tsx must be a Client Component ("use client").
+            - An error boundary does not catch errors thrown by its own, layout.tsx; use a parent error boundary or global-error.tsx when appropriate.
+            *Remember: In the image/example, the user analytics and revenue metrics sections can show their own loading or error states while the notifications section remains visible. This is one benefit of using Parallel Routes in Next.js.
+
+- Unmatched Routes : 
+
+
+
+
+
+
 
 
 

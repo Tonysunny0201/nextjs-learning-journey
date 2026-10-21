@@ -1,10 +1,20 @@
 import { notFound, redirect } from "next/navigation";
 
+function getRandomInt(count: number) {
+    return Math.floor(Math.random() * count);
+}
+
+
 export default async function ProductReviewDetail({
     params,
 }: {
     params: Promise<{ productId: string; reviewId: string }>;
 }) {
+    const random = getRandomInt(2);
+    if (random === 1) {
+        throw new Error("Error loading review"); // this is how we can throw an error in a server component to show the error page. so this isn't great for production,the error message isn't useful and worse an error in our deeply nested review Id component breaks the entire application. 
+    }
+
     const { productId, reviewId } = await params;
     if(parseInt(reviewId) > 1000){
         // notFound();
