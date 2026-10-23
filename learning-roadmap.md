@@ -54,8 +54,8 @@
 ## 5. Advanced Routing Patterns
 
 - [X] **30.** Parallel Routes
-- [ ] **31.** Unmatched Routes
-- [ ] **32.** Conditional Routes
+- [X] **31.** Unmatched Routes
+- [X] **32.** Conditional Routes
 - [ ] **33.** Intercepting Routes
 - [ ] **34.** Parallel Intercepting Routes
 
